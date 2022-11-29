@@ -1,11 +1,7 @@
 using BepInEx;
-using BepInEx.Configuration;
-using HarmonyLib;
 using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Threading;
-using UnityEngine;
 
 namespace DspILSAnalyzer
 {
@@ -17,7 +13,6 @@ namespace DspILSAnalyzer
         public const string PLUGIN_GUID = "de.sveri.dspilsanalyzer";
         public const string PLUGIN_NAME = "DspILSAnalyzer";
         public const string PLUGIN_VERSION = "0.1.0";
-        // private Harmony harmony;
 
 
         private Timer analyzeTimer;
@@ -57,6 +52,7 @@ namespace DspILSAnalyzer
                             sw.WriteLine("Planetname: {0}", planet.name);
                         }
 
+
                         foreach (StationComponent station in planet.factory.transport.stationPool)
                         {
                             if (station != null && station.isStellar)
@@ -65,11 +61,19 @@ namespace DspILSAnalyzer
                                 {
                                     var stationName = station.id.ToString();
 
-                                    if(station.name != null){
+                                    if (station.name != null)
+                                    {
                                         stationName = station.name;
                                     }
 
-                                    sw.WriteLine("Station name or ID: {0}", stationName);
+
+
+                                    int latd = 0, latf = 0, logd = 0, logf = 0;
+                                    bool north, south , west, east;
+                                    Maths.GetLatitudeLongitude(planet.factory.entityPool[station.entityId].pos, out latd, out latf, out logd, out logf, out north, out south, out west, out east);
+                                    sw.WriteLine("Station name or ID: {0} - pos: {1}N {2}E", stationName, latd, logd);
+
+
 
                                     foreach (StationStore storageItem in station.storage)
                                     {
@@ -102,12 +106,7 @@ namespace DspILSAnalyzer
             if (analyzeTimer != null)
             {
                 analyzeTimer.Dispose();
-
             }
-
-
-
-            // harmony.UnpatchSelf();
         }
     }
 }

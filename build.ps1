@@ -1,4 +1,12 @@
-dotnet build
+dotnet build --configuration Release
 
-cp .\bin\Debug\net472\DspILSAnalyzer.dll C:\Users\sveri\AppData\Roaming\r2modmanPlus-local\DysonSphereProgram\profiles\\DevelopmentProfile\BepInEx\plugins\DspILSAnalyzer
-cp .\bin\Debug\net472\DspILSAnalyzer.pdb C:\Users\sveri\AppData\Roaming\r2modmanPlus-local\DysonSphereProgram\profiles\\DevelopmentProfile\BepInEx\plugins\DspILSAnalyzer
+mkdir temp
+
+cp .\bin\Release\net472\DspILSAnalyzer.dll temp
+cp .\bin\Release\net472\DspILSAnalyzer.pdb temp
+cp .\icon.png temp
+cp .\manifest.json temp
+cp .\README.md temp
+
+
+Remove-Item -Recurse -Force temp
