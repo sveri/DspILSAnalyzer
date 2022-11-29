@@ -12,6 +12,11 @@
     <AnalysisLevel>5.0</AnalysisLevel>
   </PropertyGroup>
 
+
+  <ItemGroup>
+    <PackageReference Include="System.Text.Json" Version="7.0.0" />
+  </ItemGroup>
+
     <ItemGroup>
       <Reference Include="0Harmony">
         <HintPath>C:\Users\sveri\AppData\Roaming\r2modmanPlus-local\DysonSphereProgram\profiles\Default\BepInEx\core\0Harmony.dll</HintPath>

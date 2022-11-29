@@ -6,7 +6,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Threading;
 using UnityEngine;
-using System.Text.Json;
 
 namespace DspILSAnalyzer
 {
@@ -23,12 +22,12 @@ namespace DspILSAnalyzer
 
         private Timer analyzeTimer;
 
-        private String jsonFilePath;
+        private String filePath;
 
         private void Awake()
         {
 
-            jsonFilePath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "dsp_ILS_analyzer.json");
+            filePath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "dsp_ILS_analyzer.txt");
 
             analyzeTimer = new System.Threading.Timer(AnalyzeCallback, null, 0, 5000);
 
@@ -42,50 +41,58 @@ namespace DspILSAnalyzer
         {
             Logger.LogDebug("Timer triggered");
 
-            var ilsInfo = new IlsInfo();
+            // var ilsInfo = new IlsInfo();
 
-            File.WriteAllText(jsonFilePath, string.Empty);
+            File.WriteAllText(filePath, string.Empty);
 
             if (GameMain.universeSimulator.galaxyData.stars != null)
             {
                 foreach (StarData star in GameMain.universeSimulator.galaxyData.stars)
                 {
-                    var planets = new List<Planet>();
                     foreach (PlanetData planet in star.planets)
                     {
-                        Logger.LogInfo($"in loop: {planet.name}");
-                        var jsonPlanet = new Planet();
-                        jsonPlanet.name = planet.name;
-                        planets.Add(jsonPlanet);
+                        using (StreamWriter sw = File.AppendText(filePath))
+                        {
+
+                            sw.WriteLine("Planetname: {0}", planet.name);
+                        }
 
                         foreach (StationComponent station in planet.factory.transport.stationPool)
                         {
                             if (station != null && station.isStellar)
                             {
-                                using (StreamWriter sw = File.AppendText(jsonFilePath))
+                                using (StreamWriter sw = File.AppendText(filePath))
                                 {
-                                    sw.WriteLine(planet.id);
+                                    var stationName = station.id.ToString();
+
+                                    if(station.name != null){
+                                        stationName = station.name;
+                                    }
+
+                                    sw.WriteLine("Station name or ID: {0}", stationName);
 
                                     foreach (StationStore storageItem in station.storage)
                                     {
-                                        sw.WriteLine(storageItem.itemId);
-                                    }
+                                        var itemLdb = LDB.items.Select(storageItem.itemId);
+                                        if (itemLdb != null)
+                                        {
+                                            sw.WriteLine("\t{0}: {1} pcs, logic: {2}", itemLdb.name, storageItem.count, storageItem.remoteLogic);
 
-                                    sw.WriteLine("-----------\n");
+                                        }
+                                    }
                                 }
 
                             }
                         }
+
+                        using (StreamWriter sw = File.AppendText(filePath))
+                        {
+                            sw.WriteLine("-----------\n");
+                        }
                     }
 
-                    ilsInfo.planets = planets;
                 }
 
-            }
-
-            using (StreamWriter sw = File.AppendText(jsonFilePath))
-            {
-                sw.WriteLine(JsonSerializer.Serialize(ilsInfo));
             }
 
         }
