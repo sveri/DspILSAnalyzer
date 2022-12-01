@@ -50,7 +50,7 @@ namespace DspILSAnalyzer.UI
             //tabs
             RectTransform base_ = windowTrans;
 
-            
+
             int tabIndex_ = 1;
 
             List<Planet> planets = getPlanets();
@@ -75,12 +75,12 @@ namespace DspILSAnalyzer.UI
                     Util.AddElement(base_, stationText.transform as RectTransform, 0f + 10, 0f + topLeft);
                     stationLines++;
 
-                    foreach(Item item in station.items) {
-                        topLeft = calculateTopLeft(planetLines, stationLines, itemLines);
-                        var itemText = Util.CreateText(item.name + ", count:" + item.storageCount + " as " + item.remoteLogic);
-                        Util.AddElement(base_, itemText.transform as RectTransform, 0f + 20, 0f + topLeft);
-                        itemLines++;
-                    }
+                //     foreach(Item item in station.items) {
+                //         topLeft = calculateTopLeft(planetLines, stationLines, itemLines);
+                //         var itemText = Util.CreateText(item.name + ", count:" + item.storageCount + " as " + item.remoteLogic);
+                //         Util.AddElement(base_, itemText.transform as RectTransform, 0f + 20, 0f + topLeft);
+                //         itemLines++;
+                //     }
                 }
 
             }
@@ -104,7 +104,6 @@ namespace DspILSAnalyzer.UI
                     {
                         Planet planetClass = new Planet();
                         planetClass.name = planet.name;
-
                         List<Station> stations = new List<Station>();
 
                         if (planet.factory != null)
@@ -114,13 +113,13 @@ namespace DspILSAnalyzer.UI
                             {
                                 if (station != null && station.isStellar)
                                 {
-
-                                    List<Item> items = new List<Item>();
-
                                     Station stationClass = new Station();
-
+                                    
                                     var position = DspILSAnalyzer.Position.FactoryMethod(planet.factory.entityPool[station.entityId].pos);
                                     stationClass.position = position;
+                                    
+                                    //     List<Item> items = new List<Item>();
+
 
                                     stationClass.name = station.id.ToString();
 
@@ -129,26 +128,26 @@ namespace DspILSAnalyzer.UI
                                         stationClass.name = station.name;
                                     }
 
-                                    foreach (StationStore storageItem in station.storage)
-                                    {
-                                        var itemLdb = LDB.items.Select(storageItem.itemId);
-                                        if (itemLdb != null)
-                                        {
-                                            DspILSAnalyzer.Item item = new Item();
-                                            item.name = itemLdb.name;
-                                            item.storageCount = storageItem.count;
-                                            item.remoteLogic = storageItem.remoteLogic;
-                                            items.Add(item);
-                                        }
-                                    }
+                                    // foreach (StationStore storageItem in station.storage)
+                                    // {
+                                    //     var itemLdb = LDB.items.Select(storageItem.itemId);
+                                    //     if (itemLdb != null)
+                                    //     {
+                                    //         DspILSAnalyzer.Item item = new Item();
+                                    //         item.name = itemLdb.name;
+                                    //         item.storageCount = storageItem.count;
+                                    //         item.remoteLogic = storageItem.remoteLogic;
+                                    //         items.Add(item);
+                                    //     }
+                                    // }
 
-                                    stationClass.items = items;
+                                    //     stationClass.items = items;
                                     stations.Add(stationClass);
                                 }
                             }
-                            planetClass.stations = stations;
-                            planets.Add(planetClass);
                         }
+                        planetClass.stations = stations;
+                        planets.Add(planetClass);
                     }
 
                 }
