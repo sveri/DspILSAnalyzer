@@ -50,8 +50,7 @@ namespace DspILSAnalyzer.UI
             //tabs
             RectTransform base_ = windowTrans;
 
-            float y_ = 54;
-            float x_ = 36f;
+            
             int tabIndex_ = 1;
 
             List<Planet> planets = getPlanets();
@@ -66,20 +65,20 @@ namespace DspILSAnalyzer.UI
 
                 var topLeft = calculateTopLeft(planetLines, stationLines, itemLines);
 
-                AddElement(planetText.transform as RectTransform, 0f, topLeft);
+                Util.AddElement(base_, planetText.transform as RectTransform, 0f, topLeft);
 
                 planetLines++;
                 foreach (Station station in planet.stations)
                 {
                     var stationText = Util.CreateText("Station: " + station.name);
                     topLeft = calculateTopLeft(planetLines, stationLines, itemLines);
-                    AddElement(stationText.transform as RectTransform, 0f + 10, 0f + topLeft);
+                    Util.AddElement(base_, stationText.transform as RectTransform, 0f + 10, 0f + topLeft);
                     stationLines++;
 
                     foreach(Item item in station.items) {
                         topLeft = calculateTopLeft(planetLines, stationLines, itemLines);
                         var itemText = Util.CreateText(item.name + ", count:" + item.storageCount + " as " + item.remoteLogic);
-                        AddElement(itemText.transform as RectTransform, 0f + 20, 0f + topLeft);
+                        Util.AddElement(base_, itemText.transform as RectTransform, 0f + 20, 0f + topLeft);
                         itemLines++;
                     }
                 }
@@ -90,16 +89,6 @@ namespace DspILSAnalyzer.UI
             {
                 var spaceDivider = 20;
                 return planetLines * spaceDivider + stationLines * spaceDivider + itemLines * spaceDivider;
-            }
-
-            void AddElement(RectTransform rect_, float deltaX, float deltaY)
-            {
-                // x_ += deltaX;
-                // y_ += deltaY;
-                if (rect_ != null)
-                {
-                    Util.NormalizeRectWithTopLeft(rect_, x_ + deltaX, y_ + deltaY, base_);
-                }
             }
 
         }

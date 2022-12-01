@@ -53,6 +53,17 @@ namespace DspILSAnalyzer.UI
             return txt_;
         }
 
+        public static void AddElement(RectTransform base_, RectTransform rect_, float deltaX, float deltaY)
+        {
+            float y_ = 54;
+            float x_ = 36f;
+
+            if (rect_ != null)
+            {
+                Util.NormalizeRectWithTopLeft(rect_, x_ + deltaX, y_ + deltaY, base_);
+            }
+        }
+
         public static UIButton CreateButton(string label, float width = 0f, float height = 0f)
         {
             UIDESwarmPanel swarmPanel = UIRoot.instance.uiGame.dysonEditor.controlPanel.hierarchy.swarmPanel;
