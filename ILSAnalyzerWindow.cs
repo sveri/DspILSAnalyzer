@@ -106,7 +106,7 @@ namespace DspILSAnalyzer.UI
                         planetClass.name = planet.name;
                         List<Station> stations = new List<Station>();
 
-                        if (planet.factory != null)
+                        if (planet.factory != null && planet.factory.transport != null)
                         {
 
                             foreach (StationComponent station in planet.factory.transport.stationPool)
