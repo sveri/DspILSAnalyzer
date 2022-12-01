@@ -95,11 +95,11 @@ namespace DspILSAnalyzer
         public void OnDestroy()
         {
             harmony.UnpatchSelf();
-            // if (mainWindow != null)
-            // {
-            //     Destroy(mainWindow.gameObject);
-            //     mainWindow = null;
-            // }
+            if (mainWindow != null)
+            {
+                Destroy(mainWindow.gameObject);
+                mainWindow = null;
+            }
             // UIentryCount.OnDestory();
         }
     }
