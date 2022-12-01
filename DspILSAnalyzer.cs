@@ -21,22 +21,14 @@ namespace DspILSAnalyzer
 
         private void Awake()
         {
-
             filePath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "dsp_ILS_analyzer.txt");
-
-            analyzeTimer = new System.Threading.Timer(AnalyzeCallback, null, 0, 5000);
-
+            analyzeTimer = new System.Threading.Timer(AnalyzeCallback, null, 0, 10000);
             Logger.LogInfo($"Plugin {PLUGIN_GUID} is loaded!");
-
-
-
         }
 
         private void AnalyzeCallback(object state)
         {
             Logger.LogDebug("Timer triggered");
-
-            // var ilsInfo = new IlsInfo();
 
             File.WriteAllText(filePath, string.Empty);
 
@@ -52,43 +44,44 @@ namespace DspILSAnalyzer
                             sw.WriteLine("Planetname: {0}", planet.name);
                         }
 
+                        if (planet.factory != null && planet.factory.transport != null) {
 
-                        foreach (StationComponent station in planet.factory.transport.stationPool)
-                        {
-                            if (station != null && station.isStellar)
+
+
+                            foreach (StationComponent station in planet.factory.transport.stationPool)
                             {
-                                using (StreamWriter sw = File.AppendText(filePath))
+                                if (station != null && station.isStellar)
                                 {
-                                    var stationName = station.id.ToString();
-
-                                    if (station.name != null)
+                                    using (StreamWriter sw = File.AppendText(filePath))
                                     {
-                                        stationName = station.name;
-                                    }
+                                        var stationName = station.id.ToString();
 
-
-
-                                    int latd = 0, latf = 0, logd = 0, logf = 0;
-                                    bool north, south , west, east;
-                                    Maths.GetLatitudeLongitude(planet.factory.entityPool[station.entityId].pos, out latd, out latf, out logd, out logf, out north, out south, out west, out east);
-                                    sw.WriteLine("Station name or ID: {0} - pos: {1}N {2}E", stationName, latd, logd);
-
-
-
-                                    foreach (StationStore storageItem in station.storage)
-                                    {
-                                        var itemLdb = LDB.items.Select(storageItem.itemId);
-                                        if (itemLdb != null)
+                                        if (station.name != null)
                                         {
-                                            sw.WriteLine("\t{0}: {1} pcs, logic: {2}", itemLdb.name, storageItem.count, storageItem.remoteLogic);
+                                            stationName = station.name;
+                                        }
 
+                                        int latd = 0, latf = 0, logd = 0, logf = 0;
+                                        bool north, south , west, east;
+                                        Maths.GetLatitudeLongitude(planet.factory.entityPool[station.entityId].pos, out latd, out latf, out logd, out logf, out north, out south, out west, out east);
+                                        sw.WriteLine("Station name or ID: {0} - pos: {1}N {2}E", stationName, latd, logd);
+
+
+                                        foreach (StationStore storageItem in station.storage)
+                                        {
+                                            var itemLdb = LDB.items.Select(storageItem.itemId);
+                                            if (itemLdb != null)
+                                            {
+                                                sw.WriteLine("\t{0}: {1} pcs, logic: {2}", itemLdb.name, storageItem.count, storageItem.remoteLogic);
+
+                                            }
                                         }
                                     }
+
                                 }
-
                             }
-                        }
 
+                        }
                         using (StreamWriter sw = File.AppendText(filePath))
                         {
                             sw.WriteLine("-----------\n");
