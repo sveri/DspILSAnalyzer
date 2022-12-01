@@ -12,7 +12,7 @@ namespace DspILSAnalyzer
     {
         public const string PLUGIN_GUID = "de.sveri.dspilsanalyzer";
         public const string PLUGIN_NAME = "DspILSAnalyzer";
-        public const string PLUGIN_VERSION = "0.1.0";
+        public const string PLUGIN_VERSION = "0.1.1";
 
 
         private Timer analyzeTimer;
@@ -22,7 +22,7 @@ namespace DspILSAnalyzer
         private void Awake()
         {
             filePath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "dsp_ILS_analyzer.txt");
-            analyzeTimer = new System.Threading.Timer(AnalyzeCallback, null, 0, 10000);
+            analyzeTimer = new System.Threading.Timer(AnalyzeCallback, null, 0, 5000);
             Logger.LogInfo($"Plugin {PLUGIN_GUID} is loaded!");
         }
 
@@ -45,9 +45,6 @@ namespace DspILSAnalyzer
                         }
 
                         if (planet.factory != null && planet.factory.transport != null) {
-
-
-
                             foreach (StationComponent station in planet.factory.transport.stationPool)
                             {
                                 if (station != null && station.isStellar)
@@ -64,7 +61,9 @@ namespace DspILSAnalyzer
                                         int latd = 0, latf = 0, logd = 0, logf = 0;
                                         bool north, south , west, east;
                                         Maths.GetLatitudeLongitude(planet.factory.entityPool[station.entityId].pos, out latd, out latf, out logd, out logf, out north, out south, out west, out east);
-                                        sw.WriteLine("Station name or ID: {0} - pos: {1}N {2}E", stationName, latd, logd);
+                                        string latString = north? "N":"S";
+                                        string longString = west? "W":"E";
+                                        sw.WriteLine("Station name or ID: {0} - pos: {1}{2} {3}{4}", stationName, latd, latString, logd, longString);
 
 
                                         foreach (StationStore storageItem in station.storage)
@@ -87,11 +86,8 @@ namespace DspILSAnalyzer
                             sw.WriteLine("-----------\n");
                         }
                     }
-
                 }
-
             }
-
         }
 
         private void OnDestroy()

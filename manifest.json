@@ -1,6 +1,6 @@
 {
     "name": "DspILSAnalyzer",
-    "version_number": "0.1.0",
+    "version_number": "0.1.1",
     "website_url": "https://github.com/sveri/DspILSAnalyzer",
     "description": "Analyzer for International Logistic Stations traffic flow.",
     "dependencies": [
